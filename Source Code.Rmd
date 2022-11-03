@@ -6,8 +6,8 @@ output: word_document
 ---
 
 ```{r}
-#FIGURE 1
-#Figure 1C
+#FIGURE 3
+#Figure 3B
 setwd("~/Documents/Carabeo Lab/R Code/16v24")
 library(ggplot2)
 library(ggpubr)
@@ -30,7 +30,7 @@ ggbarplot(gdna, x="ID2", y="Log10_Value", add="mean_sd", fill="Treatment2", pale
      geom_signif(comparisons=list(c("BPD16", "TRP16"), c("UTD24", "BPD16"), c("UTD24", "TRP16"), c("BPD24", "TRP24"), c("UTD24", "BPD24"), c("UTD24", "TRP24")), annotation=c("ns", "***", "***", "ns", "***", "***"), y_position=c(4.5, 5.5, 6, 4, 6.5, 7)) + 
      theme(line=element_line(size=1, colour="black"), panel.border=element_rect(colour="black", fill="NA", size=1))
 
-#Figure 1D
+#Figure 3C
 setwd("~/Documents/Carabeo Lab/Zeiss Colibri7/IFU/16v24")
 library(ggplot2)
 library(ggpubr)
@@ -49,7 +49,7 @@ ggbarplot(x, x="ID2", y="log_IFU_mL", add="mean_sd", fill="Condition2", palette=
      theme(line=element_line(size=1, colour="black"), panel.border=element_rect(colour="black", fill="NA", size=1)) +
   geom_hline(yintercept = 3.976781123, linetype = 2)
 
-#Figure 1E
+#Figure 3D
 setwd("~/Documents/Carabeo Lab/R Code/16v24")
 library(ggplot2)
 library(ggpubr)
@@ -169,104 +169,9 @@ ggbarplot(ompA, x="ID2", y="log2", add=c("mean_sd", "point"), color="black", fil
 ```
 
 ```{r}
-#FIGURE 6
-#Figure 6B
-setwd("~/Documents/Carabeo Lab/Mizoribine Treatments/gDNA")
-library(ggplot2)
-library(ggpubr)
-
-gdna<-read.csv("MIZ_gDNA_qPCR_05102021.csv")
-gdna$ID2<-factor(gdna$ID, levels=c("0", "12.5", "25", "50", "100", "200"))
-
-gdnaaov<-aov(Value~ID2, data=gdna)
-summary(gdnaaov)
-TukeyHSD(x=gdnaaov)
-
-ggbarplot(gdna, x="ID2", y="Log10_Value", add=c("mean_sd", "point"), fill="ID2", palette=c("white", "darkseagreen1", "darkseagreen2", "darkseagreen3", "darkseagreen", "darkseagreen4")) + 
-     scale_y_continuous(expand=expand_scale(mult=c(0,0.1))) + 
-     ylab(label="Log10 Genome Equivalents/ng gDNA") + 
-     rremove("legend") + 
-     theme(axis.text.x=element_text(angle=45, hjust=1)) + 
-     xlab("Mizoribine Concentration (µM)") +
-     geom_signif(comparisons=list(c("0", "12.5"), c("12.5", "25"), c("25", "50"), c("50", "100"), c("100", "200")), annotation=c("***", "***", "***", "ns", "ns"), y_position=c(6,6,6,6,6)) + 
-     theme(line=element_line(size=1, colour="black"), panel.border=element_rect(colour="black", fill="NA", size=1))
-
-#Figure 6C
-setwd("~/Documents/Carabeo Lab/Mizoribine Treatments/IFU")
-library(ggplot2)
-library(ggpubr)
-
-x<-read.csv("MIZ_IFU_05192021.csv")
-x$ID2<-factor(x$ID, levels=c("UTD24", "MIZ24", "UTD24+16", "MIZ24+16"))
-x$Condition2<-factor(x$Condition, levels=c("UTD", "MIZ"))
-
-ggbarplot(x, x="ID2", y="log_IFU_mL", add=c("mean_sd", "point"), fill="Condition2", palette=c("white", "darkseagreen")) + 
-     scale_y_continuous(expand=expansion(mult=c(0,0.1))) + 
-     ylab(label="Log10 IFU/mL") + 
-     rremove("legend") + 
-     theme(axis.text.x=element_text(angle=45, hjust=1)) + 
-     rremove("xlab") +
-     theme(line=element_line(size=1, colour="black"), panel.border=element_rect(colour="black", fill="NA", size=1)) +
-  geom_hline(yintercept = 3.976781123, linetype = 2)
+#Figure 6
 
 #Figure 6D
-setwd("~/Documents/Carabeo Lab/Mizoribine Treatments/RT-qPCR")
-library(ggplot2)
-library(ggpubr)
-x<-read.csv("MIZ_geom5_RTqPCR_06152021.csv")
-x$Gene2<-factor(x$Gene, levels=c("trpR", "trpB", "trpA", "ytgA", "omcB", "ompA"))
-x$ID2<-factor(x$ID, levels=c("UTD24", "MIZ24"))
-
-trpR<-subset(x, Gene%in%c("trpR"))
-trpB<-subset(x, Gene%in%c("trpB"))
-trpA<-subset(x, Gene%in%c("trpA"))
-ytgA<-subset(x, Gene%in%c("ytgA"))
-omcB<-subset(x, Gene%in%c("omcB"))
-ompA<-subset(x, Gene%in%c("ompA"))
-
-t.test(log2 ~ ID, data = trpR)
-t.test(log2 ~ ID, data = trpB)
-t.test(log2 ~ ID, data = trpA)
-t.test(log2 ~ ID, data = ytgA)
-t.test(log2 ~ ID, data = omcB)
-t.test(log2 ~ ID, data = ompA)
-
-
-ggbarplot(x, x="ID2", y="log2", add=c("mean_sd", "point"), color="black", fill="ID2", palette=c("white", "chartreuse3"), facet.by="Gene2", ncol=3) +  
-     scale_y_continuous(expand=expansion(mult=c(0.1, 0.1))) + 
-     ylab(label="Log2 Transcript Expression") + 
-     rremove("legend") + 
-     theme(axis.text.x=element_text(angle=45, hjust=1)) + 
-     rremove("xlab") +
-     theme(strip.text = element_text(face = "italic")) +
-     stat_compare_means(comparisons=list(c("UTD24", "MIZ24")), label="p.signif", method="t.test", label.y=c(3.5)) +
-  geom_hline(yintercept = 0.0)
-```
-
-```{r}
-#FIGURE 7
-#Figure 7B
-setwd("~/Documents/Carabeo Lab/GTPase-Glo")
-library(ggpubr)
-library(ggplot2)
-x<-read.csv("GTP_05072021_3.csv")
-
-xaov<-aov(Normalized_Value~Treatment+Condition+Treatment:Condition, data=x)
-summary(xaov)
-TukeyHSD(x=xaov)
-
-x$Treatment2<-factor(x$Treatment, levels=c("UTD24", "MIZ24", "BPD24", "TRP24"))
-x$Condition2<-factor(x$Condition, levels=c("Mock", "Ctr"))
-
-ggbarplot(x, x="Condition2", y="Normalized_Value", add=c("mean_sd", "point"), color="black", fill="Condition2", palette=c("darkolivegreen1", "darkolivegreen"), position = position_dodge(), facet.by = "Treatment2", ncol=4) +
-     scale_y_continuous(expand=expand_scale(mult=c(0,0.1))) +
-     ylab(label = "Normalized GTP Levels\n(Luminescence)") +
-     rremove("xlab") +
-     rremove("legend") +
-     theme(line=element_line(size=1, colour="black"), panel.border=element_rect(colour="black", fill="NA", size=1)) +
-     stat_compare_means(comparisons = list(c("Mock", "Ctr")), label="p.signif", method="t.test", label.y=c(650000))
-
-#Figure 7C
 setwd("~/Documents/Carabeo Lab/R Code/16v24")
 library(ggplot2)
 library(ggpubr)
@@ -341,8 +246,107 @@ ggbarplot(ctl0875, x="ID2", y="log2", add=c("mean_sd", "point"), color="black", 
      theme(line=element_line(size=1, colour="black"), panel.border=element_rect(colour="black", fill="NA", size=1)) +
     theme(plot.title = element_text(hjust=0.5)) +
   geom_hline(yintercept=0.0)
+```
+
+```{r}
+#FIGURE 7
+#Figure 7B
+setwd("~/Documents/Carabeo Lab/Mizoribine Treatments/gDNA")
+library(ggplot2)
+library(ggpubr)
+
+gdna<-read.csv("MIZ_gDNA_qPCR_05102021.csv")
+gdna$ID2<-factor(gdna$ID, levels=c("0", "12.5", "25", "50", "100", "200"))
+
+gdnaaov<-aov(Value~ID2, data=gdna)
+summary(gdnaaov)
+TukeyHSD(x=gdnaaov)
+
+ggbarplot(gdna, x="ID2", y="Log10_Value", add=c("mean_sd", "point"), fill="ID2", palette=c("white", "darkseagreen1", "darkseagreen2", "darkseagreen3", "darkseagreen", "darkseagreen4")) + 
+     scale_y_continuous(expand=expand_scale(mult=c(0,0.1))) + 
+     ylab(label="Log10 Genome Equivalents/ng gDNA") + 
+     rremove("legend") + 
+     theme(axis.text.x=element_text(angle=45, hjust=1)) + 
+     xlab("Mizoribine Concentration (µM)") +
+     geom_signif(comparisons=list(c("0", "12.5"), c("12.5", "25"), c("25", "50"), c("50", "100"), c("100", "200")), annotation=c("***", "***", "***", "ns", "ns"), y_position=c(6,6,6,6,6)) + 
+     theme(line=element_line(size=1, colour="black"), panel.border=element_rect(colour="black", fill="NA", size=1))
+
+#Figure 7C
+setwd("~/Documents/Carabeo Lab/Mizoribine Treatments/IFU")
+library(ggplot2)
+library(ggpubr)
+
+x<-read.csv("MIZ_IFU_05192021.csv")
+x$ID2<-factor(x$ID, levels=c("UTD24", "MIZ24", "UTD24+16", "MIZ24+16"))
+x$Condition2<-factor(x$Condition, levels=c("UTD", "MIZ"))
+
+ggbarplot(x, x="ID2", y="log_IFU_mL", add=c("mean_sd", "point"), fill="Condition2", palette=c("white", "darkseagreen")) + 
+     scale_y_continuous(expand=expansion(mult=c(0,0.1))) + 
+     ylab(label="Log10 IFU/mL") + 
+     rremove("legend") + 
+     theme(axis.text.x=element_text(angle=45, hjust=1)) + 
+     rremove("xlab") +
+     theme(line=element_line(size=1, colour="black"), panel.border=element_rect(colour="black", fill="NA", size=1)) +
+  geom_hline(yintercept = 3.976781123, linetype = 2)
 
 #Figure 7D
+setwd("~/Documents/Carabeo Lab/Mizoribine Treatments/RT-qPCR")
+library(ggplot2)
+library(ggpubr)
+x<-read.csv("MIZ_geom5_RTqPCR_06152021.csv")
+x$Gene2<-factor(x$Gene, levels=c("trpR", "trpB", "trpA", "ytgA", "omcB", "ompA"))
+x$ID2<-factor(x$ID, levels=c("UTD24", "MIZ24"))
+
+trpR<-subset(x, Gene%in%c("trpR"))
+trpB<-subset(x, Gene%in%c("trpB"))
+trpA<-subset(x, Gene%in%c("trpA"))
+ytgA<-subset(x, Gene%in%c("ytgA"))
+omcB<-subset(x, Gene%in%c("omcB"))
+ompA<-subset(x, Gene%in%c("ompA"))
+
+t.test(log2 ~ ID, data = trpR)
+t.test(log2 ~ ID, data = trpB)
+t.test(log2 ~ ID, data = trpA)
+t.test(log2 ~ ID, data = ytgA)
+t.test(log2 ~ ID, data = omcB)
+t.test(log2 ~ ID, data = ompA)
+
+
+ggbarplot(x, x="ID2", y="log2", add=c("mean_sd", "point"), color="black", fill="ID2", palette=c("white", "chartreuse3"), facet.by="Gene2", ncol=6) +
+     scale_y_continuous(limits = c(-3.5, 3), expand=expansion(mult=c(0.1, 0.1))) + 
+     ylab(label="Log2 Transcript Expression") + 
+     rremove("legend") + 
+     theme(axis.text.x=element_text(angle=45, hjust=1)) + 
+     rremove("xlab") +
+     theme(strip.text = element_text(face = "italic")) +
+     stat_compare_means(comparisons=list(c("UTD24", "MIZ24")), label="p.signif", method="t.test", label.y=c(2)) +
+     geom_hline(yintercept = 0.0) +
+  theme(text = element_text(size = 10))
+
+#Figure 7E
+setwd("~/Documents/Carabeo Lab/GTPase-Glo")
+library(ggpubr)
+library(ggplot2)
+x<-read.csv("GTP_05072021_3.csv")
+
+xaov<-aov(Normalized_Value~Treatment+Condition+Treatment:Condition, data=x)
+summary(xaov)
+TukeyHSD(x=xaov)
+
+x$Treatment2<-factor(x$Treatment, levels=c("UTD24", "MIZ24", "BPD24", "TRP24"))
+x$Condition2<-factor(x$Condition, levels=c("Mock", "Ctr"))
+
+ggbarplot(x, x="Condition2", y="Normalized_Value", add=c("mean_sd", "point"), color="black", fill="Condition2", palette=c("darkolivegreen1", "darkolivegreen"), position = position_dodge(), facet.by = "Treatment2", ncol=2) +
+     scale_y_continuous(limits = c(0, 700000), expand=expansion(mult=c(0,0.1))) +
+     ylab(label = "Normalized GTP Levels\n(Luminescence)") +
+     rremove("xlab") +
+     rremove("legend") +
+  theme(axis.text.x=element_text(angle=45, hjust=1)) +
+     theme(line=element_line(size=1, colour="black"), panel.border=element_rect(colour="black", fill="NA", size=1)) +
+     stat_compare_means(comparisons = list(c("Mock", "Ctr")), label="p.signif", method="t.test", label.y=c(650000)) +
+  theme(text = element_text(size = 10)) 
+
+#Figure 7F
 setwd("~/Documents/Carabeo Lab/Mizoribine Treatments/RT-qPCR")
 library(ggplot2)
 library(ggpubr)
@@ -361,15 +365,80 @@ t.test(log2 ~ ID, data = trpC)
 t.test(log2 ~ ID, data = ctl0875)
 
 
-ggbarplot(x, x="ID2", y="log2", add=c("mean_sd", "point"), color="black", fill="ID2", palette=c("white", "chartreuse3"), facet.by="Gene2", ncol=4) +  
-     scale_y_continuous(expand=expansion(mult=c(0.1, 0.1))) + 
+ggbarplot(x, x="ID2", y="log2", add=c("mean_sd", "point"), color="black", fill="ID2", palette=c("white", "chartreuse3"), facet.by="Gene2", ncol=2) +  
+     scale_y_continuous(limits = c(-1, 2), expand=expansion(mult=c(0.1, 0.1))) + 
      ylab(label="Log2 Transcript Expression") + 
      rremove("legend") + 
      theme(axis.text.x=element_text(angle=45, hjust=1)) + 
      rremove("xlab") +
      theme(strip.text = element_text(face = "italic")) +
-     stat_compare_means(comparisons=list(c("UTD24", "MIZ24")), label="p.signif", method="t.test", label.y=c(3.5)) +
-  geom_hline(yintercept = 0.0)
+     stat_compare_means(comparisons=list(c("UTD24", "MIZ24")), label="p.signif", method="t.test", label.y=c(1)) +
+  geom_hline(yintercept = 0.0) +
+  theme(text = element_text(size = 10)) 
+```
+
+```{r}
+#FIGURE 8
+setwd("~/Documents/Paper 3/PNAS/Monisha's Data")
+library(ggplot2)
+library(ggpubr)
+
+#Figure 8B
+size<-read.csv("BPD_MIZ_Random.csv")
+size$Treatment2<-factor(size$Treatment, levels=c("UTD", "BPD", "MIZ", "BPD+MIZ"))
+
+kruskal.test(Treatment~Size, data = size)
+pairwise.wilcox.test(size$Size, size$Treatment, p.adj="bonferroni")
+
+p<-ggviolin(size, x="Treatment2", y="Size", add='median_mad', fill="Treatment2", palette=c("white", "dodgerblue1", "dodgerblue3", "dodgerblue4")) +
+  labs(y = bquote('Inclusion Size'~(µm^2))) +
+  rremove('xlab') +
+  scale_y_continuous(expand=expansion(mult=c(0.1,0.1))) +
+  rremove('legend') +
+  theme(axis.text.x=element_text(angle=45, hjust=1)) +
+  theme(line=element_line(size=1, colour="black"), panel.border=element_rect(colour="black", fill="NA", size=1)) +
+  geom_signif(comparisons=list(c("UTD", "BPD"), c("UTD", "MIZ"), c("UTD", "BPD+MIZ"), c("BPD", "BPD+MIZ"), c("MIZ", "BPD+MIZ")), annotation=c("ns", "ns", "****", "****", "****"), y_position=c(2.25, 2.5, 2.75, 3., 3.25))
+
+ggexport(p, filename = "BPD_MIZ_random_Inclusion size_violin_3x5.5_08212022.pdf", width = 3, height = 5.5)
+
+#Figure 8C
+gdna<-read.csv("MIZ_gDNA_qPCR_08212022.csv")
+gdna$ID2<-factor(gdna$ID, levels=c("UTD", "BPD", "MIZ", "BPD+MIZ"))
+
+gdnaaov<-aov(Value~ID2, data=gdna)
+summary(gdnaaov)
+TukeyHSD(x=gdnaaov)
+
+p<-ggbarplot(gdna, x="ID2", y="Log10_Value", add=c("mean_sd", "point"), fill="ID2", palette=c("white", "dodgerblue1", "dodgerblue3", "dodgerblue4")) + 
+     scale_y_continuous(expand=expand_scale(mult=c(0,0.1))) + 
+     ylab(label="Log10 Genome Equivalents/ng gDNA") + 
+     rremove("legend") + 
+     theme(axis.text.x=element_text(angle=45, hjust=1)) + 
+     xlab("") +
+     theme(line=element_line(size=1, colour="black"), panel.border=element_rect(colour="black", fill="NA", size=1))
+
+ggexport(p, filename = "BPD_MIZ_gDNA_ggpubr_3x5.5_08212022.pdf", width = 3, height = 5.5)
+
+#Figure 8D
+x<-read.csv("MIZ_IFU_08212022.csv")
+x$ID2<-factor(x$ID, levels=c("UTD", "BPD", "MIZ", "BPD+MIZ"))
+
+ifuaov<-aov(log_IFU_mL~ID2, data=x)
+summary(ifuaov)
+TukeyHSD(x=ifuaov)
+
+p<-ggbarplot(x, x="ID2", y="log_IFU_mL", add=c("mean_sd", "point"), fill="ID2", palette=c("white", "dodgerblue1", "dodgerblue3", "dodgerblue4")) + 
+     scale_y_continuous(expand=expansion(mult=c(0,0.1))) + 
+     ylab(label="Log10 IFU/mL") + 
+     rremove("legend") + 
+     theme(axis.text.x=element_text(angle=45, hjust=1)) + 
+     rremove("xlab") +
+     theme(line=element_line(size=1, colour="black"), panel.border=element_rect(colour="black", fill="NA", size=1)) +
+  geom_signif(comparisons=list(c("UTD", "BPD"), c("UTD", "MIZ"), c("UTD", "BPD+MIZ"), c("BPD", "BPD+MIZ"), c("MIZ", "BPD+MIZ")), annotation=c("ns", "ns", "*", "*", "*"), y_position=c(8.25, 9, 9.75, 10.5, 11.25)) +
+  geom_hline(yintercept = 3.976781123, linetype = 2)
+
+ggexport(p, filename = "BPD_MIZ_IFU_ggpubr_3x5.5_08212022.pdf", width = 3, height = 5.5)
+
 ```
 
 ```{r}
@@ -409,30 +478,43 @@ write.csv(as.data.frame(res$meanM), file="geNorm4_meanM_06152021.csv")
 setwd("~/Documents/Carabeo Lab/R Code/16v24")
 library(ggplot2)
 library(ggpubr)
-x<-read.csv("Ctr_RTqPCR_unique_geom5_06152021.csv")
-x$Gene2<-factor(x$Gene, levels=c("amiA", "atpB", "dapL", "tyrP"))
+x<-read.csv("Ctr_RTqPCR_unique_geom5_09042022.csv")
+x$Gene2<-factor(x$Gene, levels=c("amiA", "tyrP", "incF", "incG", "ispE", "sodM"))
 x$Treatment2<-factor(x$Treatment, levels=c("Mock", "Bpd", "Trp"))
 x$ID2<-factor(x$ID, levels=c("UTD24", "BPD16", "TRP16", "BPD24", "TRP24"))
 
 amiA<-subset(x, Gene%in%c("amiA"))
-atpB<-subset(x, Gene%in%c("atpB"))
-dapL<-subset(x, Gene%in%c("dapL"))
 tyrP<-subset(x, Gene%in%c("tyrP"))
+incF<-subset(x, Gene%in%c("incF"))
+incG<-subset(x, Gene%in%c("incG"))
+ispE<-subset(x, Gene%in%c("ispE"))
+sodM<-subset(x, Gene%in%c("sodM"))
 
 amiAaov<-aov(log2~ID, data=amiA)
 summary(amiAaov)
 TukeyHSD(x=amiAaov)
-atpBaov<-aov(log2~ID, data=atpB)
-summary(atpBaov)
-TukeyHSD(x=atpBaov)
-dapLaov<-aov(log2~ID, data=dapL)
-summary(dapLaov)
-TukeyHSD(x=dapLaov)
+
 tyrPaov<-aov(log2~ID, data=tyrP)
 summary(tyrPaov)
 TukeyHSD(x=tyrPaov)
 
-ggbarplot(amiA, x="ID2", y="log2", add=c("mean_sd", "point"), color="black", fill="Treatment2", palette=c("lightsteelblue4", "lightsteelblue1", "lightsteelblue3"), title = "amiA") +  
+incFaov<-aov(log2~ID, data=incF)
+summary(incFaov)
+TukeyHSD(x=incFaov)
+
+incGaov<-aov(log2~ID, data=incG)
+summary(incGaov)
+TukeyHSD(x=incGaov)
+
+ispEaov<-aov(log2~ID, data=ispE)
+summary(ispEaov)
+TukeyHSD(x=ispEaov)
+
+sodMaov<-aov(log2~ID, data=sodM)
+summary(sodMaov)
+TukeyHSD(x=sodMaov)
+
+p<-ggbarplot(amiA, x="ID2", y="log2", add=c("mean_sd", "point"), color="black", fill="Treatment2", palette=c("lightsteelblue4", "lightsteelblue1", "lightsteelblue3"), title = "amiA") +  
      scale_y_continuous(expand=expansion(mult=c(0.1, 0.1))) + 
      ylab(label="Log2 Transcript Expression") + 
      rremove("legend") + 
@@ -444,31 +526,9 @@ ggbarplot(amiA, x="ID2", y="log2", add=c("mean_sd", "point"), color="black", fil
     theme(plot.title = element_text(hjust=0.5)) +
   geom_hline(yintercept=0.0)
 
-ggbarplot(atpB, x="ID2", y="log2", add=c("mean_sd", "point"), color="black", fill="Treatment2", palette=c("lightsteelblue4", "lightsteelblue1", "lightsteelblue3"), title = "atpB") +  
-     scale_y_continuous(expand=expansion(mult=c(0.1, 0.1))) + 
-     ylab(label="Log2 Transcript Expression") + 
-     rremove("legend") + 
-     theme(axis.text.x=element_text(angle=45, hjust=1)) + 
-     rremove("xlab") +
-     theme(plot.title = element_text(face = "italic")) +
-     geom_signif(comparisons=list(c("BPD16", "TRP16"), c("UTD24", "BPD16"), c("UTD24", "TRP16"), c("BPD24", "TRP24"), c("UTD24", "BPD24"), c("UTD24", "TRP24")), annotation=c("***", "ns", "***", "ns", "***", "***"), y_position = c(1.5, 2, 2.5, 1.5, 3, 3.5)) +
-     theme(line=element_line(size=1, colour="black"), panel.border=element_rect(colour="black", fill="NA", size=1)) +
-    theme(plot.title = element_text(hjust=0.5)) +
-  geom_hline(yintercept=0.0)
+ggexport(p, filename="amiA_geom5_ggpubr_tukeyHSD_2.5x4.5_08212022.pdf", width=2.5, height=4.5)
 
-ggbarplot(dapL, x="ID2", y="log2", add=c("mean_sd", "point"), color="black", fill="Treatment2", palette=c("lightsteelblue4", "lightsteelblue1", "lightsteelblue3"), title = "dapL") +  
-     scale_y_continuous(expand=expansion(mult=c(0.1, 0.1))) + 
-     ylab(label="Log2 Transcript Expression") + 
-     rremove("legend") + 
-     theme(axis.text.x=element_text(angle=45, hjust=1)) + 
-     rremove("xlab") +
-     theme(plot.title = element_text(face = "italic")) +
-     geom_signif(comparisons=list(c("BPD16", "TRP16"), c("UTD24", "BPD16"), c("UTD24", "TRP16"), c("BPD24", "TRP24"), c("UTD24", "BPD24"), c("UTD24", "TRP24")), annotation=c("***", "***", "***", "***", "***", "***"), y_position = c(1.75, 2, 2.5, 1.75, 3, 3.5)) + 
-     theme(line=element_line(size=1, colour="black"), panel.border=element_rect(colour="black", fill="NA", size=1)) +
-    theme(plot.title = element_text(hjust=0.5)) +
-  geom_hline(yintercept=0.0)
-
-ggbarplot(tyrP, x="ID2", y="log2", add=c("mean_sd", "point"), color="black", fill="Treatment2", palette=c("lightsteelblue4", "lightsteelblue1", "lightsteelblue3"), title = "tyrP") +  
+p<-ggbarplot(tyrP, x="ID2", y="log2", add=c("mean_sd", "point"), color="black", fill="Treatment2", palette=c("lightsteelblue4", "lightsteelblue1", "lightsteelblue3"), title = "tyrP") +  
      scale_y_continuous(expand=expansion(mult=c(0.1, 0.1))) + 
      ylab(label="Log2 Transcript Expression") + 
      rremove("legend") + 
@@ -479,6 +539,64 @@ ggbarplot(tyrP, x="ID2", y="log2", add=c("mean_sd", "point"), color="black", fil
      theme(line=element_line(size=1, colour="black"), panel.border=element_rect(colour="black", fill="NA", size=1)) +
     theme(plot.title = element_text(hjust=0.5)) +
   geom_hline(yintercept=0.0)
+
+ggexport(p, filename="tyrP_geom5_ggpubr_tukeyHSD_2.5x4.5_08212022.pdf", width=2.5, height=4.5)
+
+p<-ggbarplot(incF, x="ID2", y="log2", add=c("mean_sd", "point"), color="black", fill="Treatment2", palette=c("lightsteelblue4", "lightsteelblue1", "lightsteelblue3"), title = "incF") +  
+     scale_y_continuous(expand=expansion(mult=c(0.1, 0.1))) + 
+     ylab(label="Log2 Transcript Expression") + 
+     rremove("legend") + 
+     theme(axis.text.x=element_text(angle=45, hjust=1)) + 
+     rremove("xlab") +
+     theme(plot.title = element_text(face = "italic")) +
+     geom_signif(comparisons=list(c("BPD16", "TRP16"), c("UTD24", "BPD16"), c("UTD24", "TRP16"), c("BPD24", "TRP24"), c("UTD24", "BPD24"), c("UTD24", "TRP24")), annotation=c("ns", "ns", "ns", "*", "**", "ns"), y_position = c(1.5, 2, 2.5, 1.5, 3, 3.5)) +
+     theme(line=element_line(size=1, colour="black"), panel.border=element_rect(colour="black", fill="NA", size=1)) +
+    theme(plot.title = element_text(hjust=0.5)) +
+  geom_hline(yintercept=0.0)
+
+ggexport(p, filename="incF_geom5_ggpubr_tukeyHSD_2.5x4.5_08212022.pdf", width=2.5, height=4.5)
+
+p<-ggbarplot(incG, x="ID2", y="log2", add=c("mean_sd", "point"), color="black", fill="Treatment2", palette=c("lightsteelblue4", "lightsteelblue1", "lightsteelblue3"), title = "incG") +  
+     scale_y_continuous(expand=expansion(mult=c(0.1, 0.1))) + 
+     ylab(label="Log2 Transcript Expression") + 
+     rremove("legend") + 
+     theme(axis.text.x=element_text(angle=45, hjust=1)) + 
+     rremove("xlab") +
+     theme(plot.title = element_text(face = "italic")) +
+     geom_signif(comparisons=list(c("BPD16", "TRP16"), c("UTD24", "BPD16"), c("UTD24", "TRP16"), c("BPD24", "TRP24"), c("UTD24", "BPD24"), c("UTD24", "TRP24")), annotation=c("ns", "ns", "ns", "**", "***", "ns"), y_position = c(1.5, 2, 2.5, 1.5, 3, 3.5)) +
+     theme(line=element_line(size=1, colour="black"), panel.border=element_rect(colour="black", fill="NA", size=1)) +
+    theme(plot.title = element_text(hjust=0.5)) +
+  geom_hline(yintercept=0.0)
+
+ggexport(p, filename="incG_geom5_ggpubr_tukeyHSD_2.5x4.5_08212022.pdf", width=2.5, height=4.5)
+
+p<-ggbarplot(ispE, x="ID2", y="log2", add=c("mean_sd", "point"), color="black", fill="Treatment2", palette=c("lightsteelblue4", "lightsteelblue1", "lightsteelblue3"), title = "ispE") +  
+     scale_y_continuous(expand=expansion(mult=c(0.1, 0.1))) + 
+     ylab(label="Log2 Transcript Expression") + 
+     rremove("legend") + 
+     theme(axis.text.x=element_text(angle=45, hjust=1)) + 
+     rremove("xlab") +
+     theme(plot.title = element_text(face = "italic")) +
+     geom_signif(comparisons=list(c("BPD16", "TRP16"), c("UTD24", "BPD16"), c("UTD24", "TRP16"), c("BPD24", "TRP24"), c("UTD24", "BPD24"), c("UTD24", "TRP24")), annotation=c("ns", "ns", "ns", "ns", "ns", "ns"), y_position = c(1.5, 2, 2.5, 1.5, 3, 3.5)) +
+     theme(line=element_line(size=1, colour="black"), panel.border=element_rect(colour="black", fill="NA", size=1)) +
+    theme(plot.title = element_text(hjust=0.5)) +
+  geom_hline(yintercept=0.0)
+
+ggexport(p, filename="ispE_geom5_ggpubr_tukeyHSD_2.5x4.5_08212022.pdf", width=2.5, height=4.5)
+
+p<-ggbarplot(sodM, x="ID2", y="log2", add=c("mean_sd", "point"), color="black", fill="Treatment2", palette=c("lightsteelblue4", "lightsteelblue1", "lightsteelblue3"), title = "sodM") +  
+     scale_y_continuous(expand=expansion(mult=c(0.1, 0.1))) + 
+     ylab(label="Log2 Transcript Expression") + 
+     rremove("legend") + 
+     theme(axis.text.x=element_text(angle=45, hjust=1)) + 
+     rremove("xlab") +
+     theme(plot.title = element_text(face = "italic")) +
+     geom_signif(comparisons=list(c("BPD16", "TRP16"), c("UTD24", "BPD16"), c("UTD24", "TRP16"), c("BPD24", "TRP24"), c("UTD24", "BPD24"), c("UTD24", "TRP24")), annotation=c("ns", "ns", "***", "**", "***", "ns"), y_position = c(1.5, 2, 2.5, 1.5, 3, 3.5)) +
+     theme(line=element_line(size=1, colour="black"), panel.border=element_rect(colour="black", fill="NA", size=1)) +
+    theme(plot.title = element_text(hjust=0.5)) +
+  geom_hline(yintercept=0.0)
+
+ggexport(p, filename="sodM_geom5_ggpubr_tukeyHSD_2.5x4.5_08212022.pdf", width=2.5, height=4.5)
 ```
 
 ```{r}
@@ -486,22 +604,26 @@ ggbarplot(tyrP, x="ID2", y="log2", add=c("mean_sd", "point"), color="black", fil
 setwd("~/Documents/Carabeo Lab/Mizoribine Treatments/RT-qPCR")
 library(ggplot2)
 library(ggpubr)
-x<-read.csv("MIZ_geom5_unique_RTqPCR_06152021.csv")
-x$Gene2<-factor(x$Gene, levels=c("amiA", "atpB", "dapL", "tyrP"))
+
+x<-read.csv("MIZ_geom5_unique_RTqPCR_09042022.csv")
+x$Gene2<-factor(x$Gene, levels=c("amiA", "incF", "incG", "sodM", "ispE", "tyrP"))
 x$ID2<-factor(x$ID, levels=c("UTD24", "MIZ24"))
 
 amiA<-subset(x, Gene%in%c("amiA"))
-atpB<-subset(x, Gene%in%c("atpB"))
-dapL<-subset(x, Gene%in%c("dapL"))
 tyrP<-subset(x, Gene%in%c("tyrP"))
+incF<-subset(x, Gene%in%c("incF"))
+incG<-subset(x, Gene%in%c("incG"))
+ispE<-subset(x, Gene%in%c("ispE"))
+sodM<-subset(x, Gene%in%c("sodM"))
 
 t.test(log2 ~ ID, data = amiA)
-t.test(log2 ~ ID, data = atpB)
-t.test(log2 ~ ID, data = dapL)
 t.test(log2 ~ ID, data = tyrP)
+t.test(log2 ~ ID, data = incF)
+t.test(log2 ~ ID, data = incG)
+t.test(log2 ~ ID, data = ispE)
+t.test(log2 ~ ID, data = sodM)
 
-
-ggbarplot(x, x="ID2", y="log2", add=c("mean_sd", "point"), color="black", fill="ID2", palette=c("white", "chartreuse3"), facet.by="Gene2", ncol=2) +  
+p<-ggbarplot(x, x="ID2", y="log2", add=c("mean_sd", "point"), color="black", fill="ID2", palette=c("white", "chartreuse3"), facet.by="Gene2", ncol=3) +  
      scale_y_continuous(expand=expansion(mult=c(0.1, 0.1))) + 
      ylab(label="Log2 Transcript Expression") + 
      rremove("legend") + 
@@ -510,6 +632,8 @@ ggbarplot(x, x="ID2", y="log2", add=c("mean_sd", "point"), color="black", fill="
      theme(strip.text = element_text(face = "italic")) +
      stat_compare_means(comparisons=list(c("UTD24", "MIZ24")), label="p.signif", method="t.test", label.y=c(3.5)) +
   geom_hline(yintercept = 0.0)
+
+ggexport(p, filename="MIZ_geom5_unique_ggpubr_ttest_3x6_09042022.pdf", width=3, height=6)
 ```
 
 ```{r}
@@ -565,6 +689,7 @@ library(dplyr)
 library(ggplot2)
 library(ggfortify)
 library(EnhancedVolcano)
+library(limma)
 #Chlamydia DESeq2
 #From htseq-counts file generated in Galaxy main (usegalaxy.org), compile csv with all counts for each conditions
 cts<-read.csv("Ctr_htseq_04082021.csv")
@@ -575,7 +700,7 @@ coldata<-read.csv("Ctr_coldata_04082021.csv")
 coldata2<-coldata%>%column_to_rownames("sample")
 
 #generate dds object
-dds<-DESeqDataSetFromMatrix(countData=cts2, colData=coldata2, design=~condition)
+dds<-DESeqDataSetFromMatrix(countData=cts2, colData=coldata2, design=~batch + condition)
 
 #filter genes with less than 10 read counts
 keep<-rowSums(counts(dds))>=10
@@ -589,10 +714,10 @@ dds<-DESeq(dds)
 resultsNames(dds)
 
 #extract tables for each comparison
-resBPD16<-lfcShrink(dds, coef=2, type='apeglm')
-resBPD24<-lfcShrink(dds, coef=3, type='apeglm')
-resTRP16<-lfcShrink(dds, coef=4, type='apeglm')
-resTRP24<-lfcShrink(dds, coef=5, type='apeglm')
+resBPD16<-lfcShrink(dds, coef=3, type='apeglm')
+resBPD24<-lfcShrink(dds, coef=4, type='apeglm')
+resTRP16<-lfcShrink(dds, coef=5, type='apeglm')
+resTRP24<-lfcShrink(dds, coef=6, type='apeglm')
 
 #save each table to csv
 write.csv(as.data.frame(resBPD16), file="Ctr_BPD16_DESeq2_04082021.csv")
@@ -602,21 +727,27 @@ write.csv(as.data.frame(resTRP24), file="Ctr_TRP24_DESeq2_04082021.csv")
 
 #rlog transform data for PCA
 rld<-rlog(dds, blind=FALSE)
+arld<-assay(rld)
+arld <- limma::removeBatchEffect(arld, rld$batch)
+assay(rld) <- arld
+cbc <- assay(rld)
 
 #plot pca using plotPCA and ggplot functions
 pca<-plotPCA(rld, intgroup="condition", returnData=TRUE)
 pVar<-round(100*attr(pca, "percentVar"))
-ggplot(pca, aes(PC1, PC2, color=condition)) +
-    geom_point(size=3) +
-    xlab(paste0("PC1: ",pVar[1],"% variance")) +
-    ylab(paste0("PC2: ",pVar[2],"% variance")) +
-    coord_fixed() +
-    theme_linedraw() +
-    theme(legend.title=element_blank()) +
-    ggtitle("C. trachomatis PCA") +
-    theme(plot.title = element_text(hjust=0.5)) +
-    geom_text(aes(label = name), hjust=0, vjust=0) +
-    xlim(-30,20)
+p<-ggplot(pca, aes(PC1, PC2, color=condition)) +
+     geom_point(size=3) +
+     xlab(paste0("PC1: ",pVar[1],"% variance")) +
+     ylab(paste0("PC2: ",pVar[2],"% variance")) +
+     coord_fixed() +
+     theme_linedraw() +
+     theme(legend.title=element_blank()) +
+     ggtitle("C. trachomatis PCA") +
+     theme(plot.title = element_text(hjust=0.5)) +
+     xlim(-40,25) +
+  ylim(-10, 10)
+
+ggexport(p, filename = "Ctr_PCA_rlog_batch_6x3_06212022.pdf", width = 6, height = 3, type = pdf)
 
 #plot MA plots using plotMA
 plotMA(resBPD16, main="BPD16 \n C. trachomatis")
@@ -624,28 +755,35 @@ plotMA(resBPD24, main="BPD24 \n C. trachomatis")
 plotMA(resTRP16, main="TRP16 \n C. trachomatis")
 plotMA(resTRP24, main="TRP24 \n C. trachomatis")
 
-#extract Normalized counts for gage
+#extract Normalized counts
 dds <- estimateSizeFactors(dds)
 ncts<-counts(dds, normalized=TRUE)
 write.csv(ncts, file="Ctr_NormCounts_DESeq2_12012020.csv")
 
 #EnhancedVolcano Plots
 #csv files were annotated with symbols, etc. manually through the Galaxy server to provide the information for the plots
+
+setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/Ctr/FINAL/06212022")
+
 #BPD16
-BPD16_vol<-read.csv("Ctr_BPD16_DESeq2_04082021.csv")
-EnhancedVolcano(BPD16_vol, lab=BPD16_vol$Symbol, x='log2FoldChange', y='padj', FCcutoff = 0.58496250072, pCutoff = 5e-2, legendPosition = '', title="BPD16", subtitle="Reference = UTD24") + theme(plot.title = element_text(hjust = 0.5)) + theme(plot.subtitle = element_text(hjust = 0.5))
+BPD16_vol<-read.csv("Ctr_BPD16_DESeq2_06212022.csv")
+p<-EnhancedVolcano(BPD16_vol, lab=BPD16_vol$Symbol, x='log2FoldChange', y='padj', FCcutoff = 0.58496250072, pCutoff = 5e-2, legendPosition = '', title="BPD16", subtitle="Reference = UTD24", selectLab = c("ytgA", "trpB", "trpR", "trpA", "tarp", "hct2", "hctA", "pmpG", "ompA", "omcB", "ribA", "trpC", "rplM", "incB", "amiA", "tyrP", "dapL", "atpB", "sctN", "copB", "mreB"), boxedLabels = TRUE, drawConnectors = TRUE, widthConnectors = 1.0, maxoverlapsConnectors = Inf) + theme(plot.title = element_text(hjust = 0.5)) + theme(plot.subtitle = element_text(hjust = 0.5))
+ggexport(p, filename = "BPD16_Volc_7.5x7.5_06212022.pdf", width = 7.5, height = 7.5, type = pdf)
 
 #TRP16
-TRP16_vol<-read.csv("Ctr_TRP16_DESeq2_04082021.csv")
-EnhancedVolcano(TRP16_vol, lab=TRP16_vol$Symbol, x='log2FoldChange', y='padj', FCcutoff = 0.58496250072, pCutoff = 5e-2, legendPosition = '', title="TRP16", subtitle="Reference = UTD24") + theme(plot.title = element_text(hjust = 0.5)) + theme(plot.subtitle = element_text(hjust = 0.5))
+TRP16_vol<-read.csv("Ctr_TRP16_DESeq2_06212022.csv")
+p<-EnhancedVolcano(TRP16_vol, lab=TRP16_vol$Symbol, x='log2FoldChange', y='padj', FCcutoff = 0.58496250072, pCutoff = 5e-2, legendPosition = '', title="TRP16", subtitle="Reference = UTD24", selectLab = c("ytgA", "trpB", "trpR", "trpA", "tarp", "hct2", "hctA", "pmpG", "ompA", "omcB", "ribA", "trpC", "rplM", "incB", "amiA", "tyrP", "dapL", "atpB", "sctN", "copB", "mreB"), boxedLabels = TRUE, drawConnectors = TRUE, widthConnectors = 1.0, maxoverlapsConnectors = Inf) + theme(plot.title = element_text(hjust = 0.5)) + theme(plot.subtitle = element_text(hjust = 0.5))
+ggexport(p, filename = "TRP16_Volc_7.5x7.5_06212022.pdf", width = 7.5, height = 7.5, type = pdf)
 
 #BPD24
-BPD24_vol<-read.csv("Ctr_BPD24_DESeq2_04082021.csv")
-EnhancedVolcano(BPD24_vol, lab=BPD24_vol$Symbol, x='log2FoldChange', y='padj', FCcutoff = 0.58496250072, pCutoff = 5e-2, legendPosition = '', title="BPD24", subtitle="Reference = UTD24") + theme(plot.title = element_text(hjust = 0.5)) + theme(plot.subtitle = element_text(hjust = 0.5))
+BPD24_vol<-read.csv("Ctr_BPD24_DESeq2_06212022.csv")
+p<-EnhancedVolcano(BPD24_vol, lab=BPD24_vol$Symbol, x='log2FoldChange', y='padj', FCcutoff = 0.58496250072, pCutoff = 5e-2, legendPosition = '', title="BPD24", subtitle="Reference = UTD24", selectLab = c("ytgA", "trpB", "trpR", "trpA", "tarp", "hct2", "hctA", "pmpG", "ompA", "omcB", "ribA", "trpC", "rplM", "incB", "amiA", "tyrP", "dapL", "atpB", "sctN", "copB", "mreB"), boxedLabels = TRUE, drawConnectors = TRUE, widthConnectors = 1.0, maxoverlapsConnectors = Inf) + theme(plot.title = element_text(hjust = 0.5)) + theme(plot.subtitle = element_text(hjust = 0.5))
+ggexport(p, filename = "BPD24_Volc_7.5x7.5_06212022.pdf", width = 7.5, height = 7.5, type = pdf)
 
 #TRP24
-TRP24_vol<-read.csv("Ctr_TRP24_DESeq2_04082021.csv")
-EnhancedVolcano(TRP24_vol, lab=TRP24_vol$Symbol, x='log2FoldChange', y='padj', FCcutoff = 0.58496250072, pCutoff = 5e-2, legendPosition = '', title="TRP24", subtitle="Reference = UTD24") + theme(plot.title = element_text(hjust = 0.5)) + theme(plot.subtitle = element_text(hjust = 0.5))
+TRP24_vol<-read.csv("Ctr_TRP24_DESeq2_06212022.csv")
+p<-EnhancedVolcano(TRP24_vol, lab=TRP24_vol$Symbol, x='log2FoldChange', y='padj', FCcutoff = 0.58496250072, pCutoff = 5e-2, legendPosition = '', title="TRP24", subtitle="Reference = UTD24", selectLab = c("ytgA", "trpB", "trpR", "trpA", "tarp", "hct2", "hctA", "pmpG", "ompA", "omcB", "ribA", "trpC", "rplM", "incB", "amiA", "tyrP", "dapL", "atpB", "sctN", "copB", "mreB"), boxedLabels = TRUE, drawConnectors = TRUE, widthConnectors = 1.0, maxoverlapsConnectors = Inf) + theme(plot.title = element_text(hjust = 0.5)) + theme(plot.subtitle = element_text(hjust = 0.5))
+ggexport(p, filename = "TRP24_Volc_7.5x7.5_06212022.pdf", width = 7.5, height = 7.5, type = pdf)
 
 #clusterProfiler analysis
  if (!requireNamespace("BiocManager", quietly = TRUE))
@@ -667,7 +805,7 @@ library(GOSemSim)
 library(pathview)
 #may need to update ggrepel, ggplot2, geforce, ggraph packages to get cnetplot and emapplot to work
 #BPD16
-setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/Ctr/FINAL")
+setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/Ctr/FINAL/06212022")
 #read data from DESeq2 output csv that has been annotated already
 BPD16<-read.csv("Ctr_BPD16_DESeq2_04082021.csv")
 
@@ -679,124 +817,121 @@ names(BPD16list)<-as.character(BPD16[,1])
 BPD16list<-sort(BPD16list, decreasing=TRUE)
 #perform gene set enrichment analysis using KEGG pathway enrichment
 BPD16k <- gseKEGG(geneList = BPD16list, organism = 'ctb', minGSSize = 20, pvalueCutoff = 0.05, verbose = FALSE)
-write.csv(as.data.frame(BPD16k), file="Ctr_BPD16_gseKEGG_04092021.csv")
+write.csv(as.data.frame(BPD16k), file="Ctr_BPD16_gseKEGG_06212022.csv")
 
 #dotplot of enriched KEGG terms
-dotplot(BPD16k, showCategory = 5, orderBy = "x") +
+p<-dotplot(BPD16k, showCategory = 5, orderBy = "x") +
   ggtitle("BPD16 KEGG") +
   theme(plot.title = element_text(hjust = 0.5)) +
   scale_x_continuous(limits=c(0.4, 1.0))
+ggexport(p, filename = "BPD16_dot_gseKEGG_4.5x4_06212022.pdf", width = 4.5, height = 4, type = pdf)
 
 #ridgeplot of enriched KEGG terms by gene expression
-ridgeplot(BPD16k, showCategory = 5) +
+p<-ridgeplot(BPD16k, showCategory = 5) +
   ggtitle("BPD16 KEGG") +
   theme(plot.title = element_text(hjust = 0.5)) +
   xlab("Log2 Fold Change")
+ggexport(p, filename = "BPD16_ridge_gseKEGG_5.5x4_06212022.pdf", width = 5.5, height = 4, type = pdf)
 
 #plot pathview for enriched KEGG terms
-BPD16l<-read.csv("Ctr_BPD16_gseKEGG_04092021.csv")
-setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/Ctr/FINAL/clusterProfiler/BPD16")
+BPD16l<-read.csv("Ctr_BPD16_gseKEGG_06212022.csv")
+setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/Ctr/FINAL/06212022/clusterProfiler/BPD16")
 tmp = sapply(BPD16l, function(pid) pathview(gene.data=BPD16list, gene.idtype="kegg", pathway.id=pid, species="ctb", same.layer = F, low="purple", mid="gray", high="yellow"))
 #riboflavin metabolism
 tmp = sapply(BPD16l, function(pid) pathview(gene.data=BPD16list, gene.idtype="kegg", pathway.id='ctb00740', species="ctb", same.layer = F, low="purple", mid="gray", high="yellow"))
 #folate biosynthesis
 tmp = sapply(BPD16l, function(pid) pathview(gene.data=BPD16list, gene.idtype="kegg", pathway.id='ctb00790', species="ctb", same.layer = F, low="purple", mid="gray", high="yellow"))
-#porphyrin and chlorophyll metabolism
-tmp = sapply(BPD16l, function(pid) pathview(gene.data=BPD16list, gene.idtype="kegg", pathway.id='ctb00860', species="ctb", same.layer = F, low="purple", mid="gray", high="yellow"))
 
 #TRP16
-setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/Ctr/FINAL")
-TRP16<-read.csv("Ctr_TRP16_DESeq2_04082021.csv")
+setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/Ctr/FINAL/06212022")
+TRP16<-read.csv("Ctr_TRP16_DESeq2_06212022.csv")
 
 TRP16list<-TRP16[,3]
 names(TRP16list)<-as.character(TRP16[,1])
 TRP16list<-sort(TRP16list, decreasing=TRUE)
 TRP16k <- gseKEGG(geneList = TRP16list, organism = 'ctb', minGSSize = 20, pvalueCutoff = 0.05, verbose = FALSE)
-write.csv(as.data.frame(TRP16k), file="Ctr_TRP16_gseKEGG_04092021.csv")
+write.csv(as.data.frame(TRP16k), file="Ctr_TRP16_gseKEGG_06212022.csv")
 
-dotplot(TRP16k, showCategory = 5, orderBy = "x") +
+p<-dotplot(TRP16k, showCategory = 5, orderBy = "x") +
   ggtitle("TRP16 KEGG") +
   theme(plot.title = element_text(hjust = 0.5)) +
   scale_x_continuous(limits=c(0.2, 1.0))
+ggexport(p, filename = "TRP16_dot_gseKEGG_4.5x4_06212022.pdf", width = 4.5, height = 4, type = pdf)
 
-ridgeplot(TRP16k, showCategory = 5) +
+p<-ridgeplot(TRP16k, showCategory = 5) +
   ggtitle("TRP16 KEGG") +
   theme(plot.title = element_text(hjust = 0.5)) +
   xlab("Log2 Fold Change")
+ggexport(p, filename = "TRP16_ridge_gseKEGG_5.5x4_06212022.pdf", width = 5.5, height = 4, type = pdf)
 
-TRP16l<-read.csv("Ctr_TRP16_gseKEGG_04092021.csv")
-setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/Ctr/FINAL/clusterProfiler/TRP16")
+TRP16l<-read.csv("Ctr_TRP16_gseKEGG_06212022.csv")
+setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/Ctr/FINAL/06212022/clusterProfiler/TRP16")
 tmp = sapply(TRP16l, function(pid) pathview(gene.data=TRP16list, gene.idtype="kegg", pathway.id=pid, species="ctb", same.layer = F, low="purple", mid="gray", high="yellow"))
 #riboflavin metabolism
 tmp = sapply(TRP16l, function(pid) pathview(gene.data=TRP16list, gene.idtype="kegg", pathway.id='ctb00740', species="ctb", same.layer = F, low="purple", mid="gray", high="yellow"))
 #folate biosynthesis
 tmp = sapply(TRP16l, function(pid) pathview(gene.data=TRP16list, gene.idtype="kegg", pathway.id='ctb00790', species="ctb", same.layer = F, low="purple", mid="gray", high="yellow"))
-#porphyrin and chlorophyll metabolism
-tmp = sapply(TRP16l, function(pid) pathview(gene.data=TRP16list, gene.idtype="kegg", pathway.id='ctb00860', species="ctb", same.layer = F, low="purple", mid="gray", high="yellow"))
 
 #BPD24
-setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/Ctr/FINAL")
-BPD24<-read.csv("Ctr_BPD24_DESeq2_04082021.csv")
+setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/Ctr/FINAL/06212022")
+BPD24<-read.csv("Ctr_BPD24_DESeq2_06212022.csv")
 
 BPD24list<-BPD24[,3]
 names(BPD24list)<-as.character(BPD24[,1])
 BPD24list<-sort(BPD24list, decreasing=TRUE)
 BPD24k <- gseKEGG(geneList = BPD24list, organism = 'ctb', minGSSize = 20, pvalueCutoff = 0.05, verbose = FALSE)
-write.csv(as.data.frame(BPD24k), file="Ctr_BPD24_gseKEGG_04092021.csv")
+write.csv(as.data.frame(BPD24k), file="Ctr_BPD24_gseKEGG_06212022.csv")
 
-dotplot(BPD24k, showCategory = 5, orderBy = "x") +
+p<-dotplot(BPD24k, showCategory = 5, orderBy = "x") +
   ggtitle("BPD24 KEGG") +
   theme(plot.title = element_text(hjust = 0.5)) +
   scale_x_continuous(limits=c(0.4, 1.0))
+ggexport(p, filename = "BPD24_dot_gseKEGG_4.5x4_06212022.pdf", width = 4.5, height = 4, type = pdf)
 
-ridgeplot(BPD24k, showCategory = 5) +
+p<-ridgeplot(BPD24k, showCategory = 5) +
   ggtitle("BPD24 KEGG") +
   theme(plot.title = element_text(hjust = 0.5)) +
   xlab("Log2 Fold Change")
+ggexport(p, filename = "BPD24_ridge_gseKEGG_5.5x4_06212022.pdf", width = 5.5, height = 4, type = pdf)
 
-BPD24l<-read.csv("Ctr_BPD24_gseKEGG_04092021.csv")
-setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/Ctr/FINAL/clusterProfiler/BPD24")
+BPD24l<-read.csv("Ctr_BPD24_gseKEGG_06212022.csv")
+setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/Ctr/FINAL/06212022/clusterProfiler/BPD24")
 tmp = sapply(BPD24l, function(pid) pathview(gene.data=BPD24list, gene.idtype="kegg", pathway.id=pid, species="ctb", same.layer = F, low="purple", mid="gray", high="yellow"))
 #riboflavin metabolism
 tmp = sapply(BPD24l, function(pid) pathview(gene.data=BPD24list, gene.idtype="kegg", pathway.id='ctb00740', species="ctb", same.layer = F, low="purple", mid="gray", high="yellow"))
 #folate biosynthesis
 tmp = sapply(BPD24l, function(pid) pathview(gene.data=BPD24list, gene.idtype="kegg", pathway.id='ctb00790', species="ctb", same.layer = F, low="purple", mid="gray", high="yellow"))
-#porphyrin and chlorophyll metabolism
-tmp = sapply(BPD24l, function(pid) pathview(gene.data=BPD24list, gene.idtype="kegg", pathway.id='ctb00860', species="ctb", same.layer = F, low="purple", mid="gray", high="yellow"))
-#lysine biosynthesis
-tmp = sapply(BPD24l, function(pid) pathview(gene.data=BPD24list, gene.idtype="kegg", pathway.id='ctb00300', species="ctb", same.layer = F, low="purple", mid="gray", high="yellow"))
-#peptidoglycan biosynthesis
-tmp = sapply(BPD24l, function(pid) pathview(gene.data=BPD24list, gene.idtype="kegg", pathway.id='ctb00550', species="ctb", same.layer = F, low="purple", mid="gray", high="yellow"))
 
 #TRP24
-setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/Ctr/FINAL")
+setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/Ctr/FINAL/06212022")
 
-TRP24<-read.csv("Ctr_TRP24_DESeq2_04082021.csv")
+TRP24<-read.csv("Ctr_TRP24_DESeq2_06212022.csv")
 TRP24list<-TRP24[,3]
 names(TRP24list)<-as.character(TRP24[,1])
 TRP24list<-sort(TRP24list, decreasing=TRUE)
 TRP24k <- gseKEGG(geneList = TRP24list, organism = 'ctb', minGSSize = 20, pvalueCutoff = 0.05, verbose = FALSE)
-write.csv(as.data.frame(TRP24k), file="Ctr_TRP24_gseKEGG_04092021.csv")
+write.csv(as.data.frame(TRP24k), file="Ctr_TRP24_gseKEGG_06212022.csv")
 
-dotplot(TRP24k, showCategory = 5, orderBy = "x") +
+p<-dotplot(TRP24k, showCategory = 5, orderBy = "x") +
   ggtitle("TRP24 KEGG") +
   theme(plot.title = element_text(hjust = 0.5)) +
   scale_x_continuous(limits=c(0.2, 1.0))
+ggexport(p, filename = "TRP24_dot_gseKEGG_4.5x4_06212022.pdf", width = 4.5, height = 4, type = pdf)
 
-ridgeplot(TRP24k, showCategory = 5) +
+p<-ridgeplot(TRP24k, showCategory = 5) +
   ggtitle("TRP24 KEGG") +
   theme(plot.title = element_text(hjust = 0.5)) +
   xlab("Log2 Fold Change")
+ggexport(p, filename = "TRP24_ridge_gseKEGG_5.5x4_06212022.pdf", width = 5.5, height = 4, type = pdf)
 
-TRP24l<-read.csv("Ctr_TRP24_gseKEGG_04092021.csv")
-setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/Ctr/FINAL/clusterProfiler/TRP24")
+TRP24l<-read.csv("Ctr_TRP24_gseKEGG_06212022.csv")
+setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/Ctr/FINAL/06212022/clusterProfiler/TRP24")
 tmp = sapply(TRP24l, function(pid) pathview(gene.data=TRP24list, gene.idtype="kegg", pathway.id=pid, species="ctb", same.layer = F, low="purple", mid="gray", high="yellow"))
 #riboflavin metabolism
 tmp = sapply(TRP24l, function(pid) pathview(gene.data=TRP24list, gene.idtype="kegg", pathway.id='ctb00740', species="ctb", same.layer = F, low="purple", mid="gray", high="yellow"))
 #folate biosynthesis
 tmp = sapply(TRP24l, function(pid) pathview(gene.data=TRP24list, gene.idtype="kegg", pathway.id='ctb00790', species="ctb", same.layer = F, low="purple", mid="gray", high="yellow"))
-#porphyrin and chlorophyll metabolism
-tmp = sapply(TRP24l, function(pid) pathview(gene.data=TRP24list, gene.idtype="kegg", pathway.id='ctb00860', species="ctb", same.layer = F, low="purple", mid="gray", high="yellow"))
+
 
 #To generate lists of matched up- or down-regualted genes between conditions, I defined up- or down-regulated sets using the filter function in Excel and then re-imported csv files of each dataset for each condition. Then I used the plyr/dplyr "match_df" function to generate lists of matched genes between conditions
 #import csvs
@@ -893,34 +1028,49 @@ dupRows<-dupsBetweenGroups(ctr_down, "ID")
 ctr_down_unique<-cbind(ctr_down, unique=!dupRows)
 write.csv(ctr_down_unique, file="Ctr_unique_down_all_04102021.csv")
 
-#to generate Venn diagram plots, I used the package ggVennDiagram, which is very simple and straight forward
+#to generate Venn diagram plots, I used the package ggVennDiagram
 #data frames were generated in csv and imported that simply listed each set of up- or down-regulated genes for each condition and then input to ggvenndiagram
 #the only issue with ggvenndiagram is that I havent yet figured out a way to populate VD plots with comparisons that skip a column in the data set, i.e. I can compare columns 1 and 2 and columns 3 and 4 (or all columns) but not 1 and 3 or 2 and 4, etc. 
 #load ggVennDiagram package
 library(ggVennDiagram)
+
 #import dataset
 y<-read.csv("Ctr_venn_DOWN_04102021.csv")
+
 #generate VD plot with all conditions
-ggVennDiagram(y) + ggtitle("C. trachomatis\n Down-regulated") + theme(plot.title=element_text(hjust=0.5))
+p<-ggVennDiagram(y, edge_lty = "blank") + 
+  ggtitle("C. trachomatis\n Down-regulated") + 
+  theme(plot.title=element_text(hjust=0.5)) +
+  scale_fill_gradient(low = "white", high = "red")
+ggexport(p, filename = "Ctr_DOWN_Venn_Volc_8.5x6.5_06212022.pdf", width = 8.5, height = 6.5, type = pdf)
+
 #generate VD plot with just 16h treatment conditions
 ggVennDiagram(y[1:2]) + ggtitle("C. trachomatis\n 16h Down-regulated") + theme(plot.title=element_text(hjust=0.5))
+
 #generate VD plot with just 24h treatment conditions
 ggVennDiagram(y[3:4]) + ggtitle("C. trachomatis\n 24h Down-regulated") + theme(plot.title=element_text(hjust=0.5))
+
 #repeat for up-regulated genes
 x<-read.csv("Ctr_venn_UP_04102021.csv")
-ggVennDiagram(x) + ggtitle("C. trachomatis\n Up-regulated") + theme(plot.title=element_text(hjust=0.5))
+
+p<-ggVennDiagram(x, edge_lty = "blank") +
+  ggtitle("C. trachomatis\n Up-regulated") +
+  theme(plot.title=element_text(hjust=0.5)) +
+  scale_fill_gradient(low = "white", high = "red")
+ggexport(p, filename = "Ctr_UP_Venn_Volc_8.5x6.5_06212022.pdf", width = 8.5, height = 6.5, type = pdf)
+
 ggVennDiagram(x[1:2]) + ggtitle("C. trachomatis\n 16h Up-regulated") + theme(plot.title=element_text(hjust=0.5))
 ggVennDiagram(x[3:4]) + ggtitle("C. trachomatis\n 24h Up-regulated") + theme(plot.title=element_text(hjust=0.5))
 ```
 
 ```{r}
 #DESeq2 - HeLa 
-setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/HeLa/Final")
+setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/HeLa/Final/06212022")
 cts<-read.csv("hela_htseq_04042021.csv")
 cts2<-cts%>%column_to_rownames("X")
 coldata<-read.csv("hela_coldata_04042021.csv")
 coldata2<-coldata%>%column_to_rownames("sample")
-dds<-DESeqDataSetFromMatrix(countData=cts2, colData=coldata2, design=~condition)
+dds<-DESeqDataSetFromMatrix(countData=cts2, colData=coldata2, design=~batch + condition)
 keep<-rowSums(counts(dds))>=10
 dds<-dds[keep,]
 dds$condition<-relevel(dds$condition, ref="UTD")
@@ -929,12 +1079,14 @@ dds<-DESeq(dds)
 resultsNames(dds)
 
 #perform lfcShrink on data using coef equal to resultsNames identity
-resBPD16<-lfcShrink(dds, coef=2, type='apeglm')
-resBPD24<-lfcShrink(dds, coef=3, type='apeglm')
-resTRP16<-lfcShrink(dds, coef=5, type='apeglm')
-resTRP24<-lfcShrink(dds, coef=6, type='apeglm')
+resBPD16<-lfcShrink(dds, coef=3, type='apeglm')
+resBPD24<-lfcShrink(dds, coef=4, type='apeglm')
+resTRP16<-lfcShrink(dds, coef=6, type='apeglm')
+resTRP24<-lfcShrink(dds, coef=7, type='apeglm')
 #Note that Mock v UTD will show DE relative to UTD24!
-resMock<-lfcShrink(dds, coef=4, type='apeglm')
+resMock<-lfcShrink(dds, coef=5, type='apeglm')
+#for ref=Mock
+resUTD24<-lfcShrink(dds, coef=7, type='apeglm')
 
 #annotate files
 library(AnnotationDbi)
@@ -971,12 +1123,17 @@ write.csv(as.data.frame(resBPD24), file="HeLa_BPD24_DESeq2_lfc_04042021.csv")
 write.csv(as.data.frame(resTRP16), file="HeLa_TRP16_DESeq2_lfc_04042021.csv")
 write.csv(as.data.frame(resTRP24), file="HeLa_TRP24_DESeq2_lfc_04042021.csv")
 write.csv(as.data.frame(resMock), file="HeLa_Mock_DESeq2_lfc_04042021.csv")
+write.csv(as.data.frame(resUTD24), file="HeLa_UTD24_DESeq2_lfc_04042021.csv")
 
 #plot PCA
 rld<-rlog(dds, blind=FALSE)
+arld<-assay(rld)
+arld <- limma::removeBatchEffect(arld, rld$batch)
+assay(rld) <- arld
+cbc <- assay(rld)
 pca<-plotPCA(rld, intgroup="condition", returnData=TRUE)
 pVar<-round(100*attr(pca, "percentVar"))
-ggplot(pca, aes(PC1, PC2, color=condition)) +
+p<-ggplot(pca, aes(PC1, PC2, color=condition)) +
     geom_point(size=3) +
     xlab(paste0("PC1: ",pVar[1],"% variance")) +
     ylab(paste0("PC2: ",pVar[2],"% variance")) +
@@ -985,8 +1142,10 @@ ggplot(pca, aes(PC1, PC2, color=condition)) +
     theme(legend.title=element_blank()) +
     ggtitle("HeLa PCA") +
     theme(plot.title = element_text(hjust=0.5)) +
-    geom_text(aes(label = name), hjust=0, vjust=0) +
-    xlim(-55,45)
+    xlim(-70,60) +
+  ylim(-50, 45)
+
+ggexport(p, filename = "HeLa_PCA_rlog_batch_4x4_06212022.pdf", width = 4, height = 4, type = pdf)
 
 #generate MA plot
 plotMA(resBPD16, main="BPD16\nHeLa", ylim=c(-6,6))
@@ -1001,54 +1160,58 @@ ncts<-counts(dds, normalized=TRUE)
 write.csv(ncts, file="HeLa_NormCounts_DESeq2_04042021.csv")
 
 #EnhancedVolcano Plots
+setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/HeLa/Final/06212022")
+
 #UTD24
 UTD24_vol<-read.csv("HeLa_UTD24_DESeq2_lfc_04042021.csv")
-UTD24_vol$padj2 <- ifelse(UTD24_vol$padj < 1e-50, 1e-50, UTD24_vol$padj)
-EnhancedVolcano(UTD24_vol, lab=UTD24_vol$symbol, x='log2FoldChange', y='padj2', pCutoff = 5e-2, legendPosition = '', title="UTD24", subtitle="Reference = Mock") +
-    theme(plot.title = element_text(hjust = 0.5)) +
-    theme(plot.subtitle = element_text(hjust = 0.5)) +
-    coord_cartesian(ylim = c(-2, 50))
-
-#adjust ylim
-EnhancedVolcano(UTD24_vol, lab=UTD24_vol$symbol, x='log2FoldChange', y='padj', pCutoff = 5e-2, legendPosition = '', title="UTD24", subtitle="Reference = Mock") + theme(plot.title = element_text(hjust = 0.5)) + theme(plot.subtitle = element_text(hjust = 0.5)) + coord_cartesian(ylim = c(-2.5, 65))
+UTD24_vol$padj2 <- ifelse(UTD24_vol$padj < 1e-30, 1e-30, UTD24_vol$padj)
+p<-EnhancedVolcano(UTD24_vol, lab=UTD24_vol$symbol, x='log2FoldChange', y='padj', pCutoff = 5e-2, legendPosition = '', title="UTD24", subtitle="Reference = Mock", selectLab = c("IDO1", "IL1B", "CXCL11", "OASL", "IL6", "EGF", "CCL5", "JUN", "ITGB1", "SDHB", "CYC1", "ND4", "COX1", "ACTB", "TLN1", "ZYX", "VCL", "MMP1", "RPL34", "RPS14", "NCBP1", "SRSF1", "PPAT", "GART", "GMPS", "IMPDH1", "AMPD1", "NME1", "ATIC"), boxedLabels = TRUE, drawConnectors = TRUE, widthConnectors = 1.0, maxoverlapsConnectors = Inf) + theme(plot.title = element_text(hjust = 0.5)) + theme(plot.subtitle = element_text(hjust = 0.5)) + coord_cartesian(ylim = c(-2.5, 60))
+ggexport(p, filename = "UTD24_HeLa_Volc_7.5x7.5_06212022.pdf", width = 7.5, height = 7.5, type = pdf)
 
 #BPD16
 BPD16_vol<-read.csv("HeLa_BPD16_DESeq2_lfc_04042021.csv")
 BPD16_vol$padj2 <- ifelse(BPD16_vol$padj < 1e-30, 1e-30, BPD16_vol$padj)
-EnhancedVolcano(BPD16_vol, lab=BPD16_vol$symbol, x='log2FoldChange', y='padj2', pCutoff = 5e-2, legendPosition = '', title="BPD16", subtitle="Reference = UTD24") +
+p<-EnhancedVolcano(BPD16_vol, lab=BPD16_vol$symbol, x='log2FoldChange', y='padj2', pCutoff = 5e-2, legendPosition = '', title="BPD16", subtitle="Reference = UTD24", selectLab = c("IDO1", "IL1B", "CXCL11", "OASL", "IL6", "EGF", "CCL5", "JUN", "ITGB1", "SDHB", "CYC1", "ND4", "COX1", "ACTB", "TLN1", "ZYX", "VCL", "MMP1", "RPL34", "RPS14", "NCBP1", "SRSF1", "PPAT", "GART", "GMPS", "IMPDH1", "AMPD1", "NME1", "ATIC", "DUOX2", "CSF3", "MAP10", "H1-3", "H2BC14"), boxedLabels = TRUE, drawConnectors = TRUE, widthConnectors = 1.0, maxoverlapsConnectors = Inf) +
     theme(plot.title = element_text(hjust = 0.5)) +
     theme(plot.subtitle = element_text(hjust = 0.5)) +
     coord_cartesian(ylim = c(-2, 30))
+ggexport(p, filename = "BPD16_HeLa_Volc_7.5x7.5_06212022.pdf", width = 7.5, height = 7.5, type = pdf)
 
 #adjust ylim
-EnhancedVolcano(BPD16_vol, lab=BPD16_vol$symbol, x='log2FoldChange', y='padj', pCutoff = 5e-2, legendPosition = '', title="BPD16", subtitle="Reference = UTD24") + theme(plot.title = element_text(hjust = 0.5)) + theme(plot.subtitle = element_text(hjust = 0.5)) + coord_cartesian(ylim = c(-2.5, 60)) 
+p<-EnhancedVolcano(BPD16_vol, lab=BPD16_vol$symbol, x='log2FoldChange', y='padj', pCutoff = 5e-2, legendPosition = '', title="BPD16", subtitle="Reference = UTD24", selectLab = c("IDO1", "IL1B", "CXCL11", "OASL", "IL6", "EGF", "CCL5", "JUN", "ITGB1", "SDHB", "CYC1", "ND4", "COX1", "ACTB", "TLN1", "ZYX", "VCL", "MMP1", "RPL34", "RPS14", "NCBP1", "SRSF1", "PPAT", "GART", "GMPS", "IMPDH1", "AMPD1", "NME1", "ATIC", "DUOX2", "CSF3"), boxedLabels = TRUE, drawConnectors = TRUE, widthConnectors = 1.0, maxoverlapsConnectors = Inf) + theme(plot.title = element_text(hjust = 0.5)) + theme(plot.subtitle = element_text(hjust = 0.5)) + coord_cartesian(ylim = c(-2.5, 60))
+ggexport(p, filename = "BPD16_HeLa_Volc_7.5x7.5_06212022.pdf", width = 7.5, height = 7.5, type = pdf)
+
 
 #TRP16
 TRP16_vol<-read.csv("HeLa_TRP16_DESeq2_lfc_04042021.csv")
 TRP16_vol$padj2 <- ifelse(TRP16_vol$padj < 1e-30, 1e-30, TRP16_vol$padj)
-EnhancedVolcano(TRP16_vol, lab=TRP16_vol$symbol, x='log2FoldChange', y='padj2', pCutoff = 5e-2, legendPosition = '', title="TRP16", subtitle="Reference = UTD24") +
+p<-EnhancedVolcano(TRP16_vol, lab=TRP16_vol$symbol, x='log2FoldChange', y='padj2', pCutoff = 5e-2, legendPosition = '', title="TRP16", subtitle="Reference = UTD24", selectLab = c("IDO1", "IL1B", "CXCL11", "OASL", "IL6", "EGF", "CCL5", "JUN", "ITGB1", "SDHB", "CYC1", "ND4", "COX1", "ACTB", "TLN1", "ZYX", "VCL", "MMP1", "RPL34", "RPS14", "NCBP1", "SRSF1", "PPAT", "GART", "GMPS", "IMPDH1", "AMPD1", "NME1", "ATIC", "APOBEC3A", "NOS2", "IFNL2", "MTUS2", "FGFBP1"), boxedLabels = TRUE, drawConnectors = TRUE, widthConnectors = 1.0, maxoverlapsConnectors = Inf) +
     theme(plot.title = element_text(hjust = 0.5)) +
     theme(plot.subtitle = element_text(hjust = 0.5)) +
     coord_cartesian(ylim = c(-2, 30))
+ggexport(p, filename = "TRP16_HeLa_Volc_7.5x7.5_06212022.pdf", width = 7.5, height = 7.5, type = pdf)
 
 #BPD24
 BPD24_vol<-read.csv("HeLa_BPD24_DESeq2_lfc_04042021.csv")
 BPD24_vol$padj2 <- ifelse(BPD24_vol$padj < 1e-50, 1e-50, BPD24_vol$padj)
-EnhancedVolcano(BPD24_vol, lab=BPD24_vol$symbol, x='log2FoldChange', y='padj2', pCutoff = 5e-2, legendPosition = '', title="BPD24", subtitle="Reference = UTD24") +
+p<-EnhancedVolcano(BPD24_vol, lab=BPD24_vol$symbol, x='log2FoldChange', y='padj2', pCutoff = 5e-2, legendPosition = '', title="BPD24", subtitle="Reference = UTD24", selectLab = c("IDO1", "IL1B", "CXCL11", "OASL", "IL6", "EGF", "CCL5", "JUN", "ITGB1", "SDHB", "CYC1", "ND4", "COX1", "ACTB", "TLN1", "ZYX", "VCL", "MMP1", "RPL34", "RPS14", "NCBP1", "SRSF1", "PPAT", "GART", "GMPS", "IMPDH1", "AMPD1", "NME1", "ATIC", "DUOX2", "CSF3", "MAP10", "H1-3", "H2BC14"), boxedLabels = TRUE, drawConnectors = TRUE, widthConnectors = 1.0, maxoverlapsConnectors = Inf) +
     theme(plot.title = element_text(hjust = 0.5)) +
     theme(plot.subtitle = element_text(hjust = 0.5)) +
     coord_cartesian(ylim = c(-2, 50))
+ggexport(p, filename = "BPD24_HeLa_Volc_7.5x7.5_06212022.pdf", width = 7.5, height = 7.5, type = pdf)
 
 #adjust ylim
-EnhancedVolcano(BPD24_vol, lab=BPD24_vol$symbol, x='log2FoldChange', y='padj', pCutoff = 5e-2, legendPosition = '', title="BPD24", subtitle="Reference = UTD24") + theme(plot.title = element_text(hjust = 0.5)) + theme(plot.subtitle = element_text(hjust = 0.5)) + coord_cartesian(ylim = c(-2.5, 100)) 
+p<-EnhancedVolcano(BPD24_vol, lab=BPD24_vol$symbol, x='log2FoldChange', y='padj', pCutoff = 5e-2, legendPosition = '', title="BPD24", subtitle="Reference = UTD24", selectLab = c("IDO1", "IL1B", "CXCL11", "OASL", "IL6", "EGF", "CCL5", "JUN", "ITGB1", "SDHB", "CYC1", "ND4", "COX1", "ACTB", "TLN1", "ZYX", "VCL", "MMP1", "RPL34", "RPS14", "NCBP1", "SRSF1", "PPAT", "GART", "GMPS", "IMPDH1", "AMPD1", "NME1", "ATIC", "DUOX2", "CSF3"), boxedLabels = TRUE, drawConnectors = TRUE, widthConnectors = 1.0, maxoverlapsConnectors = Inf) + theme(plot.title = element_text(hjust = 0.5)) + theme(plot.subtitle = element_text(hjust = 0.5)) + coord_cartesian(ylim = c(-2.5, 100)) 
+ggexport(p, filename = "BPD24_HeLa_Volc_7.5x7.5_06212022.pdf", width = 7.5, height = 7.5, type = pdf)
 
 #TRP24
 TRP24_vol<-read.csv("HeLa_TRP24_DESeq2_lfc_04042021.csv")
 TRP24_vol$padj2 <- ifelse(TRP24_vol$padj < 1e-30, 1e-30, TRP24_vol$padj)
-EnhancedVolcano(TRP24_vol, lab=TRP24_vol$symbol, x='log2FoldChange', y='padj2', pCutoff = 5e-2, legendPosition = '', title="TRP24", subtitle="Reference = UTD24") +
+p<-EnhancedVolcano(TRP24_vol, lab=TRP24_vol$symbol, x='log2FoldChange', y='padj2', pCutoff = 5e-2, legendPosition = '', title="TRP24", subtitle="Reference = UTD24", selectLab = c("IDO1", "IL1B", "CXCL11", "OASL", "IL6", "EGF", "CCL5", "JUN", "ITGB1", "SDHB", "CYC1", "ND4", "COX1", "ACTB", "TLN1", "ZYX", "VCL", "MMP1", "RPL34", "RPS14", "NCBP1", "SRSF1", "PPAT", "GART", "GMPS", "IMPDH1", "AMPD1", "NME1", "ATIC", "APOBEC3A", "NOS2", "IFNL2", "MTUS2", "FGFBP1"), boxedLabels = TRUE, drawConnectors = TRUE, widthConnectors = 1.0, maxoverlapsConnectors = Inf) +
     theme(plot.title = element_text(hjust = 0.5)) +
     theme(plot.subtitle = element_text(hjust = 0.5)) +
     coord_cartesian(ylim = c(-2, 30))
+ggexport(p, filename = "TRP24_HeLa_Volc_7.5x7.5_06212022.pdf", width = 7.5, height = 7.5, type = pdf)
 
 #clusterProfiler analysis
  if (!requireNamespace("BiocManager", quietly = TRUE))
@@ -1069,61 +1232,75 @@ library(enrichplot)
 library(GOSemSim)
 
 #UTD24
-setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/HeLa/Final")
+setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/HeLa/Final/06212022")
 #read DESeq2 file
 UTD24<-read.csv("HeLa_UTD24_DESeq2_lfc_04042021.csv")
 
 #remove all duplicated entrez IDs
 UTD24<-UTD24%>%distinct(entrez, .keep_all = TRUE)
+
 #remove all NA values
 UTD24 <- UTD24[complete.cases(UTD24),]
+
 #extract log2FoldChange column
 UTD24list <- UTD24[,3]
+
 #assign entrez IDs as row names
 names(UTD24list) <- as.character(UTD24[,9])
+
 #sort log2FoldChange in decreasing order
 UTD24list <- sort(UTD24list, decreasing = TRUE)
+
 #performe gseKEGG analysis
 UTD24k <- gseKEGG(geneList = UTD24list, organism = 'hsa', minGSSize = 100, pvalueCutoff = 0.01, verbose = FALSE, keyType = 'kegg')
+
 #write data as csv file
 write.csv(as.data.frame(UTD24k), file="HeLa_UTD24_gseKEGG_04142021.csv")
 
 #dotplot of top 10 activated and suppressed pathways
-dotplot(UTD24k, showCategory=10, orderBy = "x", split=".sign") +
+p<-dotplot(UTD24k, showCategory=15, orderBy = "x", split=".sign") +
   ggtitle("UTD24 KEGG") +
   theme(plot.title = element_text(hjust = 0.5)) +
   facet_grid(.~.sign) +
-  scale_x_continuous(limits=c(0.1, 0.4))
+  scale_x_continuous(limits=c(0.1, 0.6))
+ggexport(p, filename = "UTD24_dot_gseKEGG_7.5x10_06212022.pdf", width = 7.5, height = 10, type = pdf)
 
 #mutate gseKEGG data to sort NES in descending order, i.e. most positively-enriched pathways are at top of list
 mUTD24k <- mutate(UTD24k) %>% arrange(desc(NES))
+
 #write this data as csv file
 write.csv(as.data.frame(mUTD24k), file="HeLa_UTD24_arrangeNES_gseKEGG_04142021.csv")
+
 #dotplot of top 15 enriched pathways
-dotplot(mUTD24k, showCategory = 15, orderBy = "x") +
+p<-dotplot(mUTD24k, showCategory = 15, orderBy = "x") +
   ggtitle("UTD24 KEGG") +
   theme(plot.title = element_text(hjust = 0.5)) +
-  scale_x_continuous(limits=c(0.1, 0.4))
+  scale_x_continuous(limits=c(0.1, 0.6))
+ggexport(p, filename = "UTD24_dot_gseKEGG_6x6_06212022.pdf", width = 6, height = 6, type = pdf)
 
 #compute similarity between KEGG pathway terms
 pUTD24k <- pairwise_termsim(mUTD24k, method = "JC", semData = NULL, showCategory = 400)
 #emapplot of similarity between top 15 enriched KEGG terms
-emapplot(pUTD24k, showCategory = 15)
+p<-emapplot(pUTD24k, showCategory = 15)
+ggexport(p, filename = "UTD24_emap_gseKEGG_7.5x7.5_06212022.pdf", width = 7.5, height = 7.5, type = pdf)
 
 #ridgeline plot of top 15 significant KEGG terms
-ridgeplot(UTD24k, showCategory = 15) +
+p<-ridgeplot(UTD24k, showCategory = 15) +
   ggtitle("UTD24 KEGG") +
   theme(plot.title = element_text(hjust = 0.5)) +
   xlab("Log2 Fold Change")
+ggexport(p, filename = "UTD24_ridge_gseKEGG_6x6_06212022.pdf", width = 6, height = 6, type = pdf)
 
+#export pathview files
 UTD24l<-read.csv("HeLa_UTD24_gseKEGG_04142021.csv")
-setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/HeLa/Final/clusterProfiler/gseKEGG/UTD24")
+setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/HeLa/Final/06212022/clusterProfiler/UTD24")
 tmp = sapply(UTD24l, function(pid) pathview(gene.data=UTD24list, gene.idtype="kegg", pathway.id=pid, species="hsa", same.layer = F, low="purple", mid="gray", high="yellow"))
 #purine metabolism
 tmp = sapply(UTD24l, function(pid) pathview(gene.data=UTD24list, gene.idtype="kegg", pathway.id='hsa00230', species="hsa", same.layer = F, low="purple", mid="gray", high="yellow"))
 
+#repeat above for each condition
 #BPD16
-setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/HeLa/Final")
+setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/HeLa/Final/06212022")
 BPD16<-read.csv("HeLa_BPD16_DESeq2_lfc_04042021.csv")
 
 BPD16<-BPD16%>%distinct(entrez, .keep_all = TRUE)
@@ -1134,35 +1311,39 @@ BPD16list <- sort(BPD16list, decreasing = TRUE)
 BPD16k <- gseKEGG(geneList = BPD16list, organism = 'hsa', minGSSize = 100, pvalueCutoff = 0.01, verbose = FALSE, keyType = 'kegg')
 write.csv(as.data.frame(BPD16k), file="HeLa_BPD16_gseKEGG_04142021.csv")
 
-dotplot(BPD16k, showCategory=10, orderBy = "x", split=".sign") +
+p<-dotplot(BPD16k, showCategory=15, orderBy = "x", split=".sign") +
   ggtitle("BPD16 KEGG") +
   theme(plot.title = element_text(hjust = 0.5)) +
   facet_grid(.~.sign) +
-  scale_x_continuous(limits=c(0.1, 0.7))
+  scale_x_continuous(limits=c(0.1, 0.8))
+ggexport(p, filename = "BPD16_dot_gseKEGG_7.5x10_06212022.pdf", width = 7.5, height = 10, type = pdf)
 
 mBPD16k <- mutate(BPD16k) %>% arrange(desc(NES))
 write.csv(as.data.frame(mBPD16k), file="HeLa_BPD16_arrangeNES_gseKEGG_04142021.csv")
-dotplot(mBPD16k, showCategory = 15, orderBy = "x") +
+p<-dotplot(mBPD16k, showCategory = 15, orderBy = "x") +
   ggtitle("BPD16 KEGG") +
   theme(plot.title = element_text(hjust = 0.5)) +
   scale_x_continuous(limits=c(0.1, 0.7))
+ggexport(p, filename = "BPD16_dot_gseKEGG_6x6_06212022.pdf", width = 6, height = 6, type = pdf)
 
 pBPD16k <- pairwise_termsim(mBPD16k, method = "JC", semData = NULL, showCategory = 400)
-emapplot(pBPD16k, showCategory = 15)
+p<-emapplot(pBPD16k, showCategory = 15)
+ggexport(p, filename = "BPD16_emap_gseKEGG_7.5x7.5_06212022.pdf", width = 7.5, height = 7.5, type = pdf)
 
-ridgeplot(BPD16k, showCategory = 15) +
+p<-ridgeplot(BPD16k, showCategory = 15) +
   ggtitle("BPD16 KEGG") +
   theme(plot.title = element_text(hjust = 0.5)) +
   xlab("Log2 Fold Change")
+ggexport(p, filename = "BPD16_ridge_gseKEGG_6x6_06212022.pdf", width = 6, height = 6, type = pdf)
 
 BPD16l<-read.csv("HeLa_BPD16_gseKEGG_04142021.csv")
-setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/HeLa/Final/clusterProfiler/gseKEGG/BPD16")
+setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/HeLa/Final/06212022/clusterProfiler/BPD16")
 tmp = sapply(BPD16l, function(pid) pathview(gene.data=BPD16list, gene.idtype="kegg", pathway.id=pid, species="hsa", same.layer = F, low="purple", mid="gray", high="yellow"))
 #purine metabolism
 tmp = sapply(BPD16l, function(pid) pathview(gene.data=BPD16list, gene.idtype="kegg", pathway.id='hsa00230', species="hsa", same.layer = F, low="purple", mid="gray", high="yellow"))
 
 #TRP16
-setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/HeLa/Final")
+setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/HeLa/Final/06212022")
 TRP16<-read.csv("HeLa_TRP16_DESeq2_lfc_04042021.csv")
 
 TRP16<-TRP16%>%distinct(entrez, .keep_all = TRUE)
@@ -1175,27 +1356,30 @@ write.csv(as.data.frame(TRP16k), file="HeLa_TRP16_gseKEGG_04142021.csv")
 
 mTRP16k <- mutate(TRP16k) %>% arrange(desc(NES))
 write.csv(as.data.frame(mTRP16k), file="HeLa_TRP16_arrangeNES_gseKEGG_04142021.csv")
-dotplot(mTRP16k, showCategory = 15, orderBy = "x") +
+p<-dotplot(mTRP16k, showCategory = 15, orderBy = "x") +
   ggtitle("TRP16 KEGG") +
   theme(plot.title = element_text(hjust = 0.5)) +
   scale_x_continuous(limits=c(0.1, 0.4))
+ggexport(p, filename = "TRP16_dot_gseKEGG_6x6_06212022.pdf", width = 6, height = 6, type = pdf)
 
 pTRP16k <- pairwise_termsim(mTRP16k, method = "JC", semData = NULL, showCategory = 400)
-emapplot(pTRP16k, showCategory = 15)
+p<-emapplot(pTRP16k, showCategory = 15)
+ggexport(p, filename = "TRP16_emap_gseKEGG_7.5x7.5_06212022.pdf", width = 7.5, height = 7.5, type = pdf)
 
-ridgeplot(TRP16k, showCategory = 15) +
+p<-ridgeplot(TRP16k, showCategory = 15) +
   ggtitle("TRP16 KEGG") +
   theme(plot.title = element_text(hjust = 0.5)) +
   xlab("Log2 Fold Change")
+ggexport(p, filename = "TRP16_ridge_gseKEGG_6x6_06212022.pdf", width = 6, height = 6, type = pdf)
 
 TRP16l<-read.csv("HeLa_TRP16_gseKEGG_04142021.csv")
-setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/HeLa/Final/clusterProfiler/gseKEGG/TRP16")
+setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/HeLa/Final/06212022/clusterProfiler/TRP16")
 tmp = sapply(TRP16l, function(pid) pathview(gene.data=TRP16list, gene.idtype="kegg", pathway.id=pid, species="hsa", same.layer = F, low="purple", mid="gray", high="yellow"))
 #purine metabolism
 tmp = sapply(TRP16l, function(pid) pathview(gene.data=TRP16list, gene.idtype="kegg", pathway.id='hsa00230', species="hsa", same.layer = F, low="purple", mid="gray", high="yellow"))
 
 #BPD24
-setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/HeLa/Final")
+setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/HeLa/Final/06212022")
 BPD24<-read.csv("HeLa_BPD24_DESeq2_lfc_04042021.csv")
 
 BPD24<-BPD24%>%distinct(entrez, .keep_all = TRUE)
@@ -1206,35 +1390,50 @@ BPD24list <- sort(BPD24list, decreasing = TRUE)
 BPD24k <- gseKEGG(geneList = BPD24list, organism = 'hsa', minGSSize = 100, pvalueCutoff = 0.01, verbose = FALSE, keyType = 'kegg')
 write.csv(as.data.frame(BPD24k), file="HeLa_BPD24_gseKEGG_04142021.csv")
 
-dotplot(BPD24k, showCategory=10, orderBy = "x", split=".sign") +
+p<-dotplot(BPD24k, showCategory=15, orderBy = "x", split=".sign") +
   ggtitle("BPD24 KEGG") +
   theme(plot.title = element_text(hjust = 0.5)) +
   facet_grid(.~.sign) +
   scale_x_continuous(limits=c(0.1, 0.7))
+ggexport(p, filename = "BPD24_dot_gseKEGG_7.5x10_06212022.pdf", width = 7.5, height = 10, type = pdf)
 
 mBPD24k <- mutate(BPD24k) %>% arrange(desc(NES))
 write.csv(as.data.frame(mBPD24k), file="HeLa_BPD24_arrangeNES_gseKEGG_04142021.csv")
-dotplot(mBPD24k, showCategory = 15, orderBy = "x") +
+
+p<-dotplot(mBPD24k, showCategory = 15, orderBy = "x") +
   ggtitle("BPD24 KEGG") +
   theme(plot.title = element_text(hjust = 0.5)) +
   scale_x_continuous(limits=c(0.1, 0.7))
+ggexport(p, filename = "BPD24_dot_gseKEGG_6x6_06212022.pdf", width = 6, height = 6, type = pdf)
 
 pBPD24k <- pairwise_termsim(mBPD24k, method = "JC", semData = NULL, showCategory = 400)
-emapplot(pBPD24k, showCategory = 15)
+p<-emapplot(pBPD24k, showCategory = 15)
+ggexport(p, filename = "BPD24_emap_gseKEGG_7.5x7.5_06212022.pdf", width = 7.5, height = 7.5, type = pdf)
 
-ridgeplot(BPD24k, showCategory = 15) +
+p<-ridgeplot(BPD24k, showCategory = 15) +
   ggtitle("BPD24 KEGG") +
   theme(plot.title = element_text(hjust = 0.5)) +
   xlab("Log2 Fold Change")
+ggexport(p, filename = "BPD24_ridge_gseKEGG_6x6_06212022.pdf", width = 6, height = 6, type = pdf)
+
+#ascending
+mBPD24k <- mutate(BPD24k) %>% arrange(NES)
+write.csv(as.data.frame(mBPD24k), file="HeLa_BPD24_arrangeNES_ascend_gseKEGG_04142021.csv")
+
+p<-dotplot(mBPD24k, showCategory = 12, orderBy = "x") +
+  ggtitle("BPD24 KEGG - Suppressed") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_x_continuous(limits=c(0.1, 0.7))
+ggexport(p, filename = "BPD24_dot_ascend_gseKEGG_6x6_06212022.pdf", width = 6, height = 6, type = pdf)
 
 BPD24l<-read.csv("HeLa_BPD24_gseKEGG_04142021.csv")
-setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/HeLa/Final/clusterProfiler/gseKEGG/BPD24")
+setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/HeLa/Final/06212022/clusterProfiler/BPD24")
 tmp = sapply(BPD24l, function(pid) pathview(gene.data=BPD24list, gene.idtype="kegg", pathway.id=pid, species="hsa", same.layer = F, low="purple", mid="gray", high="yellow"))
 #purine metabolism
 tmp = sapply(BPD24l, function(pid) pathview(gene.data=BPD24list, gene.idtype="kegg", pathway.id='hsa00230', species="hsa", same.layer = F, low="purple", mid="gray", high="yellow"))
 
 #TRP24
-setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/HeLa/Final")
+setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/HeLa/Final/06212022")
 TRP24<-read.csv("HeLa_TRP24_DESeq2_lfc_04042021.csv")
 
 TRP24<-TRP24%>%distinct(entrez, .keep_all = TRUE)
@@ -1247,21 +1446,25 @@ write.csv(as.data.frame(TRP24k), file="HeLa_TRP24_gseKEGG_04142021.csv")
 
 mTRP24k <- mutate(TRP24k) %>% arrange(desc(NES))
 write.csv(as.data.frame(mTRP24k), file="HeLa_TRP24_arrangeNES_gseKEGG_04142021.csv")
-dotplot(mTRP24k, showCategory = 15, orderBy = "x") +
+
+p<-dotplot(mTRP24k, showCategory = 15, orderBy = "x") +
   ggtitle("TRP24 KEGG") +
   theme(plot.title = element_text(hjust = 0.5)) +
   scale_x_continuous(limits=c(0.1, 0.5))
+ggexport(p, filename = "TRP24_dot_gseKEGG_6x6_06212022.pdf", width = 6, height = 6, type = pdf)
 
 pTRP24k <- pairwise_termsim(mTRP24k, method = "JC", semData = NULL, showCategory = 400)
-emapplot(pTRP24k, showCategory = 15)
+p<-emapplot(pTRP24k, showCategory = 15)
+ggexport(p, filename = "TRP24_emap_gseKEGG_7.5x7.5_06212022.pdf", width = 7.5, height = 7.5, type = pdf)
 
-ridgeplot(TRP24k, showCategory = 15) +
+p<-ridgeplot(TRP24k, showCategory = 15) +
   ggtitle("TRP24 KEGG") +
   theme(plot.title = element_text(hjust = 0.5)) +
   xlab("Log2 Fold Change")
+ggexport(p, filename = "TRP24_ridge_gseKEGG_6x6_06212022.pdf", width = 6, height = 6, type = pdf)
 
 TRP24l<-read.csv("HeLa_TRP24_gseKEGG_04142021.csv")
-setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/HeLa/Final/clusterProfiler/gseKEGG/TRP24")
+setwd("~/Documents/Carabeo Lab/R Code/Dual RNA-Seq/DESeq2/HeLa/Final/06212022/clusterProfiler/TRP24")
 tmp = sapply(TRP24l, function(pid) pathview(gene.data=TRP24list, gene.idtype="kegg", pathway.id=pid, species="hsa", same.layer = F, low="purple", mid="gray", high="yellow"))
 #purine metabolism
 tmp = sapply(TRP24l, function(pid) pathview(gene.data=TRP24list, gene.idtype="kegg", pathway.id='hsa00230', species="hsa", same.layer = F, low="purple", mid="gray", high="yellow"))
